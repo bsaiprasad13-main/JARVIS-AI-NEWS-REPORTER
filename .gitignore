@@ -1,0 +1,54 @@
+# Environment variables
+.env
+.catalystrc
+jarvis_pipeline.zip
+
+# Python caches and environments
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+.pytest_cache/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dependency directories inside the function (if users install locally)
+functions/jarvis_pipeline/bin/
+functions/jarvis_pipeline/certifi/
+functions/jarvis_pipeline/certifi-*/
+functions/jarvis_pipeline/charset_normalizer/
+functions/jarvis_pipeline/charset_normalizer-*/
+functions/jarvis_pipeline/chromadb/
+functions/jarvis_pipeline/chromadb-*/
+functions/jarvis_pipeline/dotenv/
+functions/jarvis_pipeline/feedparser/
+functions/jarvis_pipeline/feedparser-*/
+functions/jarvis_pipeline/feedparser_sgmllib/
+functions/jarvis_pipeline/feedparser_sgmllib-*/
+functions/jarvis_pipeline/google/
+functions/jarvis_pipeline/google_generativeai-*/
+functions/jarvis_pipeline/idna/
+functions/jarvis_pipeline/idna-*/
+functions/jarvis_pipeline/jinja2/
+functions/jarvis_pipeline/jinja2-*/
+functions/jarvis_pipeline/Jinja2-*/
+functions/jarvis_pipeline/markupsafe/
+functions/jarvis_pipeline/markupsafe-*/
+functions/jarvis_pipeline/python_dotenv-*/
+functions/jarvis_pipeline/requests/
+functions/jarvis_pipeline/requests-*/
+functions/jarvis_pipeline/resend/
+functions/jarvis_pipeline/resend-*/
+functions/jarvis_pipeline/sentence_transformers/
+functions/jarvis_pipeline/sentence_transformers-*/
+functions/jarvis_pipeline/sgmllib3k-*/
+functions/jarvis_pipeline/urllib3/
+functions/jarvis_pipeline/urllib3-*/
+functions/jarvis_pipeline/zcatalyst_sdk/
+functions/jarvis_pipeline/zcatalyst_sdk-*/

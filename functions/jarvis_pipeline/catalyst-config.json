@@ -1,0 +1,11 @@
+{
+	"deployment": {
+		"name": "jarvis_pipeline",
+		"stack": "python_3_12",
+		"type": "basicio",
+		"env_variables": {}
+	},
+	"execution": {
+		"main": "main.py"
+	}
+}

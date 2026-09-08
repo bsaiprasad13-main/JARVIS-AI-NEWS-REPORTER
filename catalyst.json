@@ -1,0 +1,9 @@
+{
+  "functions": {
+    "targets": [
+      "jarvis_pipeline"
+    ],
+    "ignore": [],
+    "source": "functions"
+  }
+}
