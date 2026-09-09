@@ -87,8 +87,11 @@ Return your response strictly as JSON in this structure:
   "section_3_india_news": [ ... same structure ... ],
   "section_notes": {{
     "section_1_status": "normal | quiet | source_issue",
+    "section_1_message": "Include explanation if status is quiet or source_issue, else empty string",
     "section_2_status": "normal | quiet | source_issue",
-    "section_3_status": "normal | quiet | source_issue"
+    "section_2_message": "Include explanation if status is quiet or source_issue, else empty string",
+    "section_3_status": "normal | quiet | source_issue",
+    "section_3_message": "Include explanation if status is quiet or source_issue, else empty string"
   }}
 }}
 

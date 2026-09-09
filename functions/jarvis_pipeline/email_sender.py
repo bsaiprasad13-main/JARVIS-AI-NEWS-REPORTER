@@ -56,13 +56,13 @@ def render_email_html(generated_data):
             </div>
             
             <h2 style="font-size:18px; color:#2563eb; border-bottom:2px solid #e5e7eb; padding-bottom:6px; margin-top:24px;">🛠️ AI Tools for Product Managers</h2>
-            {build_cards(tools) if tools else '<p style="color:#6b7280; font-size:14px;">Today was quiet for new tool releases.</p>'}
+            {build_cards(tools) if tools else f'<p style="color:#6b7280; font-size:14px;">{{notes.get("section_1_message") or "Today was quiet for new tool releases."}}</p>'}
 
             <h2 style="font-size:18px; color:#2563eb; border-bottom:2px solid #e5e7eb; padding-bottom:6px; margin-top:24px;">📰 AI Industry News</h2>
-            {build_cards(ai_news) if ai_news else '<p style="color:#6b7280; font-size:14px;">Today was quiet in major AI headlines.</p>'}
+            {build_cards(ai_news) if ai_news else f'<p style="color:#6b7280; font-size:14px;">{{notes.get("section_2_message") or "Today was quiet in major AI headlines."}}</p>'}
 
             <h2 style="font-size:18px; color:#2563eb; border-bottom:2px solid #e5e7eb; padding-bottom:6px; margin-top:24px;">🇮🇳 India Startup & Tech News</h2>
-            {build_cards(india_news) if india_news else '<p style="color:#6b7280; font-size:14px;">No major startup funding/updates logged today.</p>'}
+            {build_cards(india_news) if india_news else f'<p style="color:#6b7280; font-size:14px;">{{notes.get("section_3_message") or "No major startup funding/updates logged today."}}</p>'}
             
             <div style="text-align:center; margin-top:32px; font-size:12px; color:#9ca3af;">
                 Jarvis Daily Digest • Automated with Google Gemini & Zoho Catalyst
