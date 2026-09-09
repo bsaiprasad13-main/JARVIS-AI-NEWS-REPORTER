@@ -2,6 +2,10 @@
 
 Jarvis is an automated pipeline that curates the latest AI tools, AI industry news, and tech startup updates, delivering a beautifully formatted daily digest directly to your inbox. It is built to run entirely on **Zoho Catalyst's Free Tier** using Python, and uses Google Gemini for processing and Resend for email delivery.
 
+> [!TIP]
+> **Recommended: Use an AI IDE**
+> To make exploring, modifying, or deploying this project even easier, we highly recommend opening this repository in an AI Coding Assistant like **Google Anti Gravity**, Cursor, or any agentic AI IDE. They can help you understand the codebase or even automate the setup steps for you!
+
 ## 🌟 Features
 - **Daily Tech Digest**: AI tools, industry news, and startup funding updates.
 - **Automated**: Runs on a schedule via Zoho Catalyst Cron.
@@ -37,22 +41,62 @@ By default, Resend provides a testing domain, but to send emails to arbitrary ad
 
 ---
 
-## 🚀 Installation & Deployment
+## 🚀 Ultimate Beginner's Deployment Guide (No Coding Required)
 
-We have designed a unique, AI-assisted installation process to make deployment incredibly simple. Instead of following tedious manual steps, you can use an AI Coding Assistant to do the heavy lifting for you!
+We have designed this project so that **absolutely anyone** can deploy it to Zoho Catalyst for free, even if you have never used a terminal or written code before. We will do this by connecting your GitHub account directly to Zoho Catalyst!
 
-**👉 Please see the [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for step-by-step instructions on how to set this up automatically using your AI IDE.**
+### Step 1: Fork this Repository
+First, you need your own copy of this code.
+1. Scroll to the top of this page on GitHub.
+2. Click the **Fork** button (top right corner).
+3. Click **Create Fork**. You now have your own copy of the project in your GitHub account!
 
----
+### Step 2: Get Your API Keys
+Your JARVIS reporter needs a few keys to access the AI and send emails. Keep these tabs open:
+1. **Google Gemini Key:** Go to [Google AI Studio](https://aistudio.google.com/), sign in, and click "Get API Key". It's 100% free.
+2. **Product Hunt Token:** Go to [Product Hunt API Dashboard](https://api.producthunt.com/v2/docs), sign in, and create an application to get your "Developer Token".
+3. **Resend API Key:** Go to [Resend](https://resend.com/), sign up, and generate an API key. 
+   - *Note:* To send emails reliably, you must verify a domain in Resend. Once verified, note your sending email (e.g., `jarvis@yourdomain.com`).
 
-## ⚙️ Environment Variables
-For reference, here are the environment variables the project requires. You can find a template in `.env.example`:
+### Step 3: Create Your Zoho Catalyst Project
+This is where the magic happens. Zoho Catalyst will run our code for free.
+1. Go to the [Zoho Catalyst Console](https://console.catalyst.zoho.com/) and create a free account.
+2. Click **Create Project**. Name it `Jarvis-News-Reporter`.
+3. Accept the terms and open your new project dashboard.
 
-- `GEMINI_API_KEY`: Your Google Gemini API Key.
-- `RESEND_API_KEY`: Your Resend API Key.
-- `PRODUCT_HUNT_DEVELOPER_TOKEN`: Your Product Hunt token.
-- `TO_EMAIL`: The email address where you want to receive the digest.
-- `FROM_EMAIL`: The sender email address (must use your verified Resend domain).
+### Step 4: Deploy Directly from GitHub
+Now, we tell Zoho to pull the code from your GitHub fork.
+1. In your Zoho Catalyst project, look at the left sidebar.
+2. Click on **Environments** (or **CI/CD** depending on your layout), and find the **GitHub Integration** or **Deploy from Git** option.
+3. Click **Connect to GitHub**. Zoho will ask for permission to view your repositories—click Authorize.
+4. From the dropdown list, select your forked `JARVIS-AI-NEWS-REPORTER` repository.
+5. Choose the `main` branch.
+6. Click **Deploy**. Catalyst will automatically download the code, install everything, and set up your `jarvis_pipeline` Python function!
+
+### Step 5: Add Your Variables to Zoho
+Your code is deployed, but it needs those API keys you gathered in Step 2 to actually run!
+1. In the Zoho Catalyst left sidebar, click **Compute**, then click **Functions**.
+2. You will see your newly deployed `jarvis_pipeline` function. Click on it.
+3. Go to the **Configuration** or **Environment Variables** tab.
+4. You need to add exactly 5 variables here. Click "Add Variable" for each one:
+   - **Key:** `GEMINI_API_KEY` | **Value:** (Paste your Gemini key here)
+   - **Key:** `RESEND_API_KEY` | **Value:** (Paste your Resend key here)
+   - **Key:** `TO_EMAIL`       | **Value:** (The email address where you want to receive the digest)
+   - **Key:** `FROM_EMAIL`     | **Value:** (Your verified Resend sending email)
+   - **Key:** `PRODUCT_HUNT_DEVELOPER_TOKEN` | **Value:** (Your Product Hunt token)
+5. Save your variables!
+
+### Step 6: Schedule the Daily Email (Cron Job)
+Finally, let's tell Zoho to run this automatically every morning.
+1. In the Zoho Catalyst left sidebar, find the **Serverless** section and click **Cron**.
+2. Click **Create Cron Job**.
+3. Set the frequency to **Daily** and pick your preferred time (e.g., 8:00 AM).
+4. Set the Target Type to **Function**, and select your `jarvis_pipeline` function.
+5. Save it!
+
+**🎉 Congratulations!** You have successfully deployed your own automated AI News Reporter. It will now run on autopilot and email you every day!
+
+*(Advanced users: If you prefer deploying via the CLI, please see [ADVANCED_DEPLOYMENT.md](./ADVANCED_DEPLOYMENT.md))*
 
 ---
 

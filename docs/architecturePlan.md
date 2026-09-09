@@ -76,7 +76,7 @@ If a core component fails (e.g., Database unreachable, Gemini API quota exceeded
 
 ---
 
-## 4. Directory Structure Blueprint (Local & Pre-Deployment)
+## 4. GitHub Repository Structure Blueprint
 
 ```text
 jarvis/
