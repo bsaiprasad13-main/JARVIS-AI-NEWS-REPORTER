@@ -1,6 +1,7 @@
 import os
 import sys
 import requests
+import cloudscraper
 import datetime
 import urllib.parse
 import xml.etree.ElementTree as ET
@@ -65,7 +66,8 @@ def fetch_product_hunt(last_run_utc):
     items = []
     success = False
     try:
-        response = requests.post(url, headers=headers, json={"query": query}, timeout=10)
+        scraper = cloudscraper.create_scraper()
+        response = scraper.post(url, headers=headers, json={"query": query}, timeout=10)
         if response.status_code == 200:
             data = response.json()
             posts = data.get("data", {}).get("posts", {}).get("edges", [])
@@ -102,7 +104,8 @@ def fetch_hacker_news(last_run_utc):
         three_days_ago_ts = now_ts - (72 * 3600)
         url = f"https://hn.algolia.com/api/v1/search_by_date?tags=show_hn&numericFilters=created_at_i>{three_days_ago_ts}&hitsPerPage=50"
         
-        response = requests.get(url, timeout=10)
+        scraper = cloudscraper.create_scraper()
+        response = scraper.get(url, timeout=10)
         if response.status_code == 200:
             hits = response.json().get("hits", [])
             for hit in hits:
@@ -210,7 +213,8 @@ def fetch_rss(source_name, feed_url, section, last_run_utc):
     
     for url in urls_to_try:
         try:
-            resp = requests.get(url, headers=headers, timeout=10)
+            scraper = cloudscraper.create_scraper()
+            resp = scraper.get(url, headers=headers, timeout=10)
             if resp.status_code == 200 and resp.text:
                 entries = parse_xml_feed(resp.text)
                 if entries:

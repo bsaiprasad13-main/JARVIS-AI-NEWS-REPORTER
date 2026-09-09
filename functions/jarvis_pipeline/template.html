@@ -76,7 +76,7 @@
         </div>
         {% endfor %}
     {% elif notes.section_1_status == 'source_issue' %}
-        <div class="status-message">A source issue prevented us from gathering full data for this section today. The items below (if any) are what we could find.</div>
+        <div class="status-message">{% if notes.section_1_message %}{{ notes.section_1_message }}{% else %}A source issue prevented us from gathering full data for this section today. The items below (if any) are what we could find.{% endif %}</div>
         {% for item in tools %}
         <div class="item">
             <p class="item-title"><a href="{{ item.link }}">{{ item.title }}</a></p>
@@ -85,7 +85,7 @@
         </div>
         {% endfor %}
     {% else %}
-        <div class="status-message">Quiet day today! Not much genuine activity to report in this area.</div>
+        <div class="status-message">{% if notes.section_1_message %}{{ notes.section_1_message }}{% else %}Quiet day today! Not much genuine activity to report in this area.{% endif %}</div>
     {% endif %}
 
     <!-- Section 2: AI Industry News -->
@@ -99,7 +99,7 @@
         </div>
         {% endfor %}
     {% elif notes.section_2_status == 'source_issue' %}
-        <div class="status-message">A source issue prevented us from gathering full data for this section today. The items below (if any) are what we could find.</div>
+        <div class="status-message">{% if notes.section_2_message %}{{ notes.section_2_message }}{% else %}A source issue prevented us from gathering full data for this section today. The items below (if any) are what we could find.{% endif %}</div>
         {% for item in ai_news %}
         <div class="item">
             <p class="item-title"><a href="{{ item.link }}">{{ item.title }}</a></p>
@@ -108,7 +108,7 @@
         </div>
         {% endfor %}
     {% else %}
-        <div class="status-message">Quiet day today! Not much genuine activity to report in this area.</div>
+        <div class="status-message">{% if notes.section_2_message %}{{ notes.section_2_message }}{% else %}Quiet day today! Not much genuine activity to report in this area.{% endif %}</div>
     {% endif %}
 
     <!-- Section 3: India Startup News -->
@@ -122,7 +122,7 @@
         </div>
         {% endfor %}
     {% elif notes.section_3_status == 'source_issue' %}
-        <div class="status-message">A source issue prevented us from gathering full data for this section today. The items below (if any) are what we could find.</div>
+        <div class="status-message">{% if notes.section_3_message %}{{ notes.section_3_message }}{% else %}A source issue prevented us from gathering full data for this section today. The items below (if any) are what we could find.{% endif %}</div>
         {% for item in india_news %}
         <div class="item">
             <p class="item-title"><a href="{{ item.link }}">{{ item.title }}</a></p>
@@ -131,7 +131,7 @@
         </div>
         {% endfor %}
     {% else %}
-        <div class="status-message">Quiet day today! Not much genuine activity to report in this area.</div>
+        <div class="status-message">{% if notes.section_3_message %}{{ notes.section_3_message }}{% else %}Quiet day today! Not much genuine activity to report in this area.{% endif %}</div>
     {% endif %}
 
 </body>
