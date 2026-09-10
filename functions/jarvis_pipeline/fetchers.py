@@ -1,7 +1,6 @@
 import os
 import sys
 import requests
-import cloudscraper
 import datetime
 import urllib.parse
 import xml.etree.ElementTree as ET
@@ -27,6 +26,13 @@ def is_within_window(item_time_utc, last_run_utc):
     if last_run_utc and item_time_utc <= last_run_utc:
         return False
     return True
+
+def get_session():
+    session = requests.Session()
+    session.headers.update({
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 JarvisNewsBot/1.0'
+    })
+    return session
 
 def fetch_product_hunt(last_run_utc):
     if not PRODUCT_HUNT_TOKEN:
@@ -66,8 +72,8 @@ def fetch_product_hunt(last_run_utc):
     items = []
     success = False
     try:
-        scraper = cloudscraper.create_scraper()
-        response = scraper.post(url, headers=headers, json={"query": query}, timeout=10)
+        session = get_session()
+        response = session.post(url, headers=headers, json={"query": query}, timeout=10)
         if response.status_code == 200:
             data = response.json()
             posts = data.get("data", {}).get("posts", {}).get("edges", [])
@@ -104,8 +110,8 @@ def fetch_hacker_news(last_run_utc):
         three_days_ago_ts = now_ts - (72 * 3600)
         url = f"https://hn.algolia.com/api/v1/search_by_date?tags=show_hn&numericFilters=created_at_i>{three_days_ago_ts}&hitsPerPage=50"
         
-        scraper = cloudscraper.create_scraper()
-        response = scraper.get(url, timeout=10)
+        session = get_session()
+        response = session.get(url, timeout=10)
         if response.status_code == 200:
             hits = response.json().get("hits", [])
             for hit in hits:
@@ -197,10 +203,6 @@ def fetch_rss(source_name, feed_url, section, last_run_utc):
     success = False
     new_url = feed_url
     
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 JarvisNewsBot/1.0'
-    }
-    
     urls_to_try = [feed_url]
     base_url = urllib.parse.urljoin(feed_url, '/')
     urls_to_try.extend([
@@ -211,11 +213,46 @@ def fetch_rss(source_name, feed_url, section, last_run_utc):
     ])
     urls_to_try = list(dict.fromkeys(urls_to_try))
     
+    session = get_session()
     for url in urls_to_try:
         try:
-            scraper = cloudscraper.create_scraper()
-            resp = scraper.get(url, headers=headers, timeout=10)
-            if resp.status_code == 200 and resp.text:
+            resp = session.get(url, timeout=10)
+            
+            # Fallback to rss2json proxy if rate-limited or blocked
+            if resp.status_code in [403, 429, 503]:
+                print(f"Direct fetch blocked ({resp.status_code}) for {url}. Attempting rss2json proxy...")
+                proxy_url = f"https://api.rss2json.com/v1/api.json?rss_url={urllib.parse.quote(url)}"
+                proxy_resp = session.get(proxy_url, timeout=15)
+                
+                if proxy_resp.status_code == 200:
+                    data = proxy_resp.json()
+                    if data.get('status') == 'ok':
+                        new_url = url
+                        for entry in data.get('items', []):
+                            pub_date_str = entry.get('pubDate')
+                            dt = None
+                            if pub_date_str:
+                                try:
+                                    dt = parsedate_to_datetime(pub_date_str)
+                                    if dt.tzinfo is None:
+                                        dt = dt.replace(tzinfo=datetime.timezone.utc)
+                                except Exception:
+                                    pass
+                            
+                            if dt and is_within_window(dt, last_run_utc):
+                                items.append({
+                                    "id": entry.get('guid') or entry.get('link'),
+                                    "title": entry.get('title'),
+                                    "url": entry.get('link'),
+                                    "source": source_name,
+                                    "section": section,
+                                    "signal": None
+                                })
+                        success = True
+                        break # Success via proxy
+            
+            # Standard direct parsing
+            elif resp.status_code == 200 and resp.text:
                 entries = parse_xml_feed(resp.text)
                 if entries:
                     new_url = url

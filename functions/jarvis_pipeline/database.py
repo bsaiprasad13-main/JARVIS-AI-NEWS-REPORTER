@@ -65,6 +65,26 @@ def init_db():
         # 2. Check & populate initial Sources
         sources_table = ds.table('Sources')
         try:
+            # Migration: Remove TechCircle and add Business Standard if not present
+            try:
+                query_tc = app.zcql().execute_query("SELECT ROWID FROM Sources WHERE name = 'TechCircle'")
+                if query_tc and len(query_tc) > 0:
+                    row_id = query_tc[0].get('Sources', query_tc[0]).get('ROWID')
+                    sources_table.delete_row(row_id)
+                    print("Migration: Removed TechCircle from Data Store.")
+                    
+                query_bs = app.zcql().execute_query("SELECT ROWID FROM Sources WHERE name = 'Business Standard Technology'")
+                if not query_bs:
+                    sources_table.insert_row({
+                        "name": "Business Standard Technology", 
+                        "url": "https://www.business-standard.com/rss/technology-108.rss", 
+                        "source_type": "rss", 
+                        "enabled": True
+                    })
+                    print("Migration: Added Business Standard Technology to Data Store.")
+            except Exception as e:
+                print(f"Migration check: {e}")
+
             query_sources = app.zcql().execute_query("SELECT ROWID FROM Sources")
             if not query_sources:
                 initial_sources = [
@@ -74,7 +94,7 @@ def init_db():
                     {"name": "VentureBeat", "url": "https://venturebeat.com/category/ai/feed/", "source_type": "rss", "enabled": True},
                     {"name": "YourStory", "url": "https://yourstory.com/feed", "source_type": "rss", "enabled": True},
                     {"name": "Inc42", "url": "https://inc42.com/feed/", "source_type": "rss", "enabled": True},
-                    {"name": "TechCircle", "url": "https://www.techcircle.in/category/startups/feed", "source_type": "rss", "enabled": True}
+                    {"name": "Business Standard Technology", "url": "https://www.business-standard.com/rss/technology-108.rss", "source_type": "rss", "enabled": True}
                 ]
                 for src in initial_sources:
                     sources_table.insert_row(src)
@@ -144,7 +164,7 @@ def get_sources():
                     
                     if src_type == 'api':
                         section = 'section_1'
-                    elif name in ["YourStory", "Inc42", "TechCircle"]:
+                    elif name in ["YourStory", "Inc42", "Business Standard Technology"]:
                         section = 'section_3'
                     else:
                         section = 'section_2'
@@ -169,7 +189,7 @@ def get_sources():
         {"name": "VentureBeat", "url": "https://venturebeat.com/category/ai/feed/", "method": "rss", "section": "section_2"},
         {"name": "YourStory", "url": "https://yourstory.com/feed", "method": "rss", "section": "section_3"},
         {"name": "Inc42", "url": "https://inc42.com/feed/", "method": "rss", "section": "section_3"},
-        {"name": "TechCircle", "url": "https://www.techcircle.in/category/startups/feed", "method": "rss", "section": "section_3"}
+        {"name": "Business Standard Technology", "url": "https://www.business-standard.com/rss/technology-108.rss", "method": "rss", "section": "section_3"}
     ]
 
 def update_source_url(name, new_url):
