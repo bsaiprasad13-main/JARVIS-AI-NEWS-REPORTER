@@ -7,10 +7,31 @@ Jarvis is an automated pipeline that curates the latest AI tools, AI industry ne
 > To make exploring, modifying, or deploying this project even easier, we highly recommend opening this repository in an AI Coding Assistant like **Google Anti Gravity**, Cursor, or any agentic AI IDE. They can help you understand the codebase or even automate the setup steps for you!
 
 ## 🌟 Features
-- **Daily Tech Digest**: AI tools, industry news, and startup funding updates.
-- **Automated**: Runs on a schedule via Zoho Catalyst Cron.
-- **AI-Powered**: Uses Google Gemini (RAG) to process and summarize news.
-- **Cost-Effective**: Designed to operate within the generous free limits of Zoho Catalyst.
+- **Daily Tech Digest**: AI tools, AI industry news, and Indian startup news, in one email every morning.
+- **7 Sources**: Product Hunt, Hacker News, TechCrunch, VentureBeat, YourStory, Inc42, and Business Standard Technology.
+- **Grounded Summaries**: Gemini Flash writes the digest only from the stories fetched that day, so it doesn't invent news.
+- **Self-Healing Sources**: If a feed moves or blocks requests, Jarvis tries alternative feed URLs and a proxy fallback, and saves the working URL for future runs.
+- **Honest About Gaps**: When a source fails, the digest says so instead of presenting it as a quiet news day.
+- **Failure Alerts**: If a run fails, Jarvis emails you the error.
+- **No Repeats**: Skips stories already sent in the last 14 days and near-duplicate stories from different sources.
+- **Free to Run**: Runs on Zoho Catalyst's free tier as a scheduled serverless function.
+
+## ⚙️ How It Works
+Each daily run is a five-step pipeline (`functions/jarvis_pipeline/main.py`), triggered by a Zoho Catalyst Cron job:
+
+1. **Clean up**: Sets up the Catalyst Data Store tables on first run and prunes sent-story logs older than 14 days.
+2. **Fetch**: Pulls new stories since the last successful run from all 7 sources (Product Hunt API, Hacker News API, and 5 RSS feeds). For RSS feeds it tries common alternative feed URLs and an rss2json proxy if the direct request is blocked, and records any source that still fails.
+3. **Deduplicate**: Drops stories already sent in the last 14 days, then drops near-duplicates covering the same story, compared by text similarity on the titles and summaries.
+4. **Generate**: Sends the remaining stories, plus the list of failed sources, to Gemini Flash, which returns structured JSON for three sections: AI tools (Product Hunt, Hacker News), AI news (TechCrunch, VentureBeat), and Indian startup news (YourStory, Inc42, Business Standard).
+5. **Deliver**: Renders the JSON into the HTML template and sends it with Resend, then logs the sent stories and the run time in the Data Store. If any step fails, Jarvis sends an alert email with the error.
+
+| Layer | Tool |
+| :--- | :--- |
+| Runtime and scheduling | Zoho Catalyst (Python function + Cron) |
+| State (sources, sent stories, last run) | Zoho Catalyst Data Store |
+| Summarization | Google Gemini Flash |
+| Email | Resend + Jinja2 HTML template |
+| Fetching | Product Hunt GraphQL API, Hacker News (Algolia) API, RSS feeds (built-in XML parser, rss2json fallback) |
 
 ---
 
