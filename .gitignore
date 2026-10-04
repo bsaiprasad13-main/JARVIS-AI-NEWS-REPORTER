@@ -52,3 +52,13 @@ functions/jarvis_pipeline/urllib3/
 functions/jarvis_pipeline/urllib3-*/
 functions/jarvis_pipeline/zcatalyst_sdk/
 functions/jarvis_pipeline/zcatalyst_sdk-*/
+functions/jarvis_pipeline/cloudscraper/
+functions/jarvis_pipeline/cloudscraper-*/
+functions/jarvis_pipeline/pyparsing/
+functions/jarvis_pipeline/pyparsing-*/
+functions/jarvis_pipeline/requests_toolbelt/
+functions/jarvis_pipeline/requests_toolbelt-*/
+functions/jarvis_pipeline/typing_extensions*
+
+# Local deployment bundles
+jarvis_pipeline_*.zip

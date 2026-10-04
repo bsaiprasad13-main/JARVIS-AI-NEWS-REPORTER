@@ -28,7 +28,7 @@ def run_daily_pipeline():
     prune_sent_items() # Remove sent logs > 14 days old
     
     vector_store = VectorStore()
-    vector_store.reset_for_new_run() # Wipe /tmp ChromaDB
+    vector_store.reset_for_new_run() # Clear the in-memory dedup store
     
     last_run_utc = get_last_run_time()
     print(f"Last successful run was: {last_run_utc}")
